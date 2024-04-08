@@ -168,7 +168,10 @@ def ExamAttendeView(request, id_quiz):
 def ExamAttendListView(request, quiz_id):
 
     quiz = Quiz.objects.get(id=quiz_id)
-    quiz_attempts = QuizAttempt.objects.filter(quiz=quiz)
+    if request.user.is_staff:
+        quiz_attempts = QuizAttempt.objects.filter(quiz=quiz)
+    else:
+        quiz_attempts = QuizAttempt.objects.filter(quiz=quiz, user=request.user)
     quiz_scores = {attempt: attempt.score for attempt in quiz_attempts}
     total_questions = Question.objects.filter(quiz=quiz)
     question_count = len(total_questions)

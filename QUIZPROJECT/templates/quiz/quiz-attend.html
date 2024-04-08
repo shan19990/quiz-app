@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ quiz.title }}</title>
+    <style>
+        /* Style for the countdown timer */
+        #countdown {
+            position: fixed;
+            top: 10px; /* Adjust the top position as needed */
+            right: 10px; /* Adjust the right position as needed */
+            background-color: #fff;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ quiz.title }}</h1>
+    <p>{{ quiz.description }}</p>
+    <form id="quizForm" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+
+    <!-- Countdown timer -->
+    <div id="countdown"></div>
+
+    <script>
+        // Countdown timer in seconds
+        var timerDuration = {{ timer_duration }}; // 5 minutes
+
+        // Function to update the countdown timer
+        function updateTimer() {
+            var timerElement = document.getElementById('countdown');
+            var minutes = Math.floor(timerDuration / 60);
+            var seconds = timerDuration % 60;
+
+            // Format the timer display (add leading zeros if needed)
+            var timerDisplay = minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
+            timerElement.textContent = 'Time left: ' + timerDisplay;
+
+            // Decrement timer duration
+            timerDuration--;
+
+            // Check if time has run out
+            if (timerDuration < 0) {
+                clearInterval(timerInterval);
+                timerElement.textContent = 'Time is up!';
+                // Automatically submit the form when time runs out
+                document.getElementById('quizForm').submit();
+            }
+        }
+
+        // Update the timer display every second
+        var timerInterval = setInterval(updateTimer, 1000);
+    </script>
+</body>
+</html>

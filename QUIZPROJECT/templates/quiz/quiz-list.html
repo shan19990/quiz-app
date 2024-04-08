@@ -1,0 +1,71 @@
+{% extends 'base/quiz-header.html' %}
+{% block content %}
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-0">Quiz List</h1>
+            {% if user.is_staff %}
+                <a href="{% url 'quiz-add' %}" class="btn btn-success">ADD QUIZ</a>
+            {% endif %}
+        </div>
+        {% if ongoing_quizzes_dict %}
+            <h3>Ongoing Quiz</h3>
+        {% endif %}
+        <ul class="list-group">
+            {% for quiz, quiz_attempt_check in ongoing_quizzes_dict.items %}
+            <li class="list-group-item">
+                <div>
+                    <h5 class="mb-1">{{ quiz.title }}</h5>
+                    <p class="mb-1">{{ quiz.description }}</p>
+                    <p class="mb-1">Duration: {{ quiz.duration_minutes }} minutes</p>
+                    <p class="mb-1">Quiz Date: {% if quiz.quiz_date %}{{ quiz.quiz_date }}{% else %}N/A{% endif %}</p>
+                </div>
+                {% if not quiz_attempt_check and not user.is_staff %}
+                    <a href="{% url 'attend-exam' quiz.id %}" class="btn btn-primary me-2">Attend</a>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% if upcomming_quizzes %}
+            <h3>Upcoming Quiz</h3>
+        {% endif %}
+        <ul class="list-group">
+            {% for quiz in upcomming_quizzes %}
+            <li class="list-group-item">
+                <div>
+                    <h5 class="mb-1">{{ quiz.title }}</h5>
+                    <p class="mb-1">{{ quiz.description }}</p>
+                    <p class="mb-1">Duration: {{ quiz.duration_minutes }} minutes</p>
+                    <p class="mb-1">Quiz Date: {% if quiz.quiz_date %}{{ quiz.quiz_date }}{% else %}N/A{% endif %}</p>
+                </div>
+                {% if user.is_staff %}
+                    <div>
+                        <a href="{% url 'quiz-edit' quiz.id %}" class="btn btn-primary me-2">Edit</a>
+                        <a href="{% url 'quiz-question-list' quiz.id %}" class="btn btn-primary">Questions</a>
+                        <a href="{% url 'quiz-delete' quiz.id %}" class="btn btn-danger">Delete</a>
+                    </div>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% if ended_quizzes %}
+            <h3>Ended Quiz</h3>
+        {% endif %}
+        <ul class="list-group">
+            {% for quiz in ended_quizzes %}
+            <li class="list-group-item">
+                <div>
+                    <h5 class="mb-1">{{ quiz.title }}</h5>
+                    <p class="mb-1">{{ quiz.description }}</p>
+                    <p class="mb-1">Duration: {{ quiz.duration_minutes }} minutes</p>
+                    <p class="mb-1">Quiz Date: {% if quiz.quiz_date %}{{ quiz.quiz_date }}{% else %}N/A{% endif %}</p>
+                </div>
+                {% if user.is_staff %}
+                    <a href="{% url 'attend-exam-list' quiz.id %}" class="btn btn-primary me-2">Show Result</a>
+                {% else %}
+                    <a href="{% url 'attend-exam-list' quiz.id %}" class="btn btn-primary me-2">Show Marks</a>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>    
+{% endblock %}

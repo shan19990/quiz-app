@@ -1,0 +1,36 @@
+{% extends 'base/quiz-header.html' %}
+{% block content %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col">
+                <h2 class="d-inline">Quiz: {{ quiz.title }}</h2>
+            </div>
+            <div class="col-auto">
+                <div class="card-body">
+                    <a href="{% url 'quiz-question-add' quiz.id %}" class="btn btn-success">Add Question</a>
+                </div>
+            </div>
+        </div>
+        {% for question_data in question_model %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Question: {{ question_data.question.text }}</h5>
+                    <ul class="list-group">
+                        {% for option in question_data.option_model %}
+                            <li class="list-group-item">
+                                <label for="option{{ option.id }}">{{ option.text }}</label>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <p class="mt-2">Correct Answer: 
+                        {% for answer in question_data.answer_model %}
+                            {{ answer.text }}
+                        {% endfor %}
+                    </p>
+                    <!-- Edit and Delete buttons -->
+                    <a href="{% url 'quiz-question-delete' question_data.question.id quiz.id %}" class="btn btn-danger">Delete</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

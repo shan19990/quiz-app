@@ -1,0 +1,30 @@
+{% extends 'base/quiz-header.html' %}
+    {% block content %}
+    <div class="container mt-5 table-container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-0">RESULT</h1>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Marks</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for attempt, score in quiz_scores.items %}
+                <tr>
+                    <td>{{ attempt.user.first_name }} {{ attempt.user.last_name }}</td>
+                    <td>{{ attempt.start_time }}</td>
+                    <td>{{ attempt.end_time }}</td>
+                    <td>{{ attempt.score }}/{{ question_count }}</td>
+                    <td><a href="{% url 'exam-answer-sheet' attempt.id %}" class="btn btn-primary me-2">Answer Sheet</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>    
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base/quiz-header.html' %}
+    {% block content %}
+    <div class="container mt-5 table-container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-0">RESULT</h1>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Question</th>
+                    <th>Selected Option</th>
+                    <th>Correct Option</th>
+                    <th>Marks</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for question in question_attempt %}
+                <tr class="{% if question.marks_obtained == 1 %}green-row{% else %}red-row{% endif %}">
+                    <td>{{ question.question }}</td>
+                    <td>{{ question.selected_option }}</td>
+                    <td>{{ question.question.answer_set.first.text }}</td>
+                    <td>{{ question.marks_obtained }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>    
+{% endblock %}
